@@ -1,0 +1,38 @@
+presets:
+  verify: null
+  update: null
+  release: null
+  coffeescript:
+    targets:
+      node:
+        - preset: node
+          glob:
+            - '{src,test}/**/*.coffee'
+
+  yaml:
+    targets:
+      node:
+        - preset: js
+          glob:
+            - "{src,test}/**/*.yaml"
+
+
+sky:
+  namespace: templates-sky-api
+  lambda:
+    handlers:
+      - name: api
+        path: src/index.coffee
+        configuration:
+          timeout: 30 # seconds
+          memory: 3000 # MB
+     
+  alb:
+    domain: templates-sky-api.dashkite.com
+    headers:
+      - name: x-api-key
+        expression: $secret dashkite-api-key
+
+  secrets:
+    - name: dashkite-api-key
+      type: random-16
